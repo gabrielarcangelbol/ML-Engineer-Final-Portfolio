@@ -1,43 +1,26 @@
-# ML Engineer Portfolio Project: [Project Title Here]
+# Project Scoping: Stock Market Directional Trend Prediction
 
-## 📋 Project Scoping
+## 1. Goals
+The objective of this project is to build an end-to-end machine learning pipeline to predict the daily price movement of a specific stock ticker using historical data from the Yahoo Finance API.
 
-### 1. Goals
-The objective of this project is to develop an end-to-end machine learning pipeline that provides actionable insights and predictive power for **[Name of the Problem, e.g., Customer Churn / House Price Prediction]**.
+* **Business Objective:** To provide a tool that helps identify whether a stock is likely to close higher or lower the following day, assisting in automated trading decision-making.
+* **Technical Objective:** Develop a production-ready pipeline that automates data ingestion, feature engineering (technical indicators), model training, and backtesting.
+* **Success Metric:** Achieve an **Accuracy > 55%** and optimize **Precision** to reduce the risk of false-positive buy signals.
 
-* **Business Objective:** To enable data-driven decision-making by predicting **[Target Variable]** with high reliability.
-* **Technical Objective:** Build a productionalizable pipeline including data preprocessing, feature engineering, and model deployment.
-* **Success Metric:** Achieve a minimum **[Metric, e.g., F1-Score or RMSE]** of **[Target Value]**.
-
-### 2. Data
-* **Source:** The dataset is sourced from **[Source Name, e.g., Kaggle / Codecademy Resources]**.
-* **Type:** Structured data in CSV format.
+## 2. Data
+* **Source:** Yahoo Finance API (via `yfinance` Python library).
+* **Type:** Time-series OHLCV data (Open, High, Low, Close, Volume).
 * **Key Characteristics:**
-    * **Features:** Includes variables such as **[Feature 1, Feature 2, and Feature 3]**.
-    * **Target:** The model will predict **[Name of Target Column]**.
-    * **Size:** Approximately **[Number]** observations and **[Number]** features.
+    * **Features:** Daily returns, Moving Averages (SMA 50/200), RSI (Relative Strength Index), and Volume changes.
+    * **Target:** Binary classification (1 if Tomorrow's Close > Today's Close, else 0).
+    * **Timeframe:** Last 10-20 years of historical daily data for a major ticker (e.g., SPY or AAPL).
 
-### 3. Analysis & Workflow (Pipeline)
-The project will follow a structured Machine Learning workflow:
-
-1.  **Exploratory Data Analysis (EDA):** * Analyzing feature distributions and correlations.
-    * Identifying outliers and data imbalances.
-2.  **Data Preprocessing:**
-    * Handling missing values and data cleaning.
-    * Feature encoding (One-Hot, Label Encoding) and scaling.
-3.  **Modeling:**
-    * Establishing a **Baseline Model** (e.g., Logistic Regression or Linear Regression).
-    * Experimenting with **Advanced Algorithms** (e.g., Random Forest, XGBoost, or SVM).
-4.  **Evaluation:**
-    * Using **Cross-Validation** to ensure generalization.
-    * Analyzing results via Confusion Matrix, ROC-AUC, or Residual plots.
-5.  **Productionalization:**
-    * Exporting the final model using `joblib` or `pickle`.
-    * Creating a clean, reusable Python script for the prediction pipeline.
-
----
-
-## 🛠️ Tech Stack
-* **Language:** Python
-* **Libraries:** Pandas, NumPy, Scikit-learn, Matplotlib/Seaborn
-* **Tools:** Jupyter Notebook, Git, GitHub
+## 3. Analysis & Workflow
+1.  **Data Ingestion:** Automated fetching of historical data using the `yfinance` API.
+2.  **Exploratory Data Analysis (EDA):** Visualizing price trends, volatility, and correlation between technical indicators and price movement.
+3.  **Feature Engineering:** Creating lagged variables and technical momentum indicators to capture market sentiment.
+4.  **Modeling:** * Baseline: Random Forest Classifier.
+    * Advanced: XGBoost or Gradient Boosting Machines.
+5.  **Evaluation:** * Use of **Time-Series Cross-Validation** (to avoid data leakage).
+    * Performance analysis via Confusion Matrix, Precision-Recall curves, and Cumulative Return backtesting.
+6.  **Productionalization:** Exporting the trained model and creating a script for real-time daily inference.
