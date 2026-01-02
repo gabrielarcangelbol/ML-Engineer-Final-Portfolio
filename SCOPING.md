@@ -9,11 +9,13 @@ The objective of this project is to build an end-to-end machine learning pipelin
 
 ## 2. Data
 * **Source:** Yahoo Finance API (via `yfinance` Python library).
+* **Ticker:** `RSP` (Invesco S&P 500® Equal Weight ETF).
+* **Rationale:** Unlike the standard S&P 500, RSP weights all 500 companies equally. This provides a more balanced view of market breadth, making it an excellent target for trend prediction models.
 * **Type:** Time-series OHLCV data (Open, High, Low, Close, Volume).
+* **Timeframe:** From 2003-05-01 (Inception) to Present.
 * **Key Characteristics:**
     * **Features:** Daily returns, Moving Averages (SMA 50/200), RSI (Relative Strength Index), and Volume changes.
     * **Target:** Binary classification (1 if Tomorrow's Close > Today's Close, else 0).
-    * **Timeframe:** Last 10-20 years of historical daily data for a major ticker (e.g., SPY or AAPL).
 
 ## 3. Analysis & Workflow
 1.  **Data Ingestion:** Automated fetching of historical data using the `yfinance` API.
