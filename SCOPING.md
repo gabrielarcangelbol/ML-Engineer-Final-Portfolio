@@ -4,25 +4,26 @@
 The objective of this project is to build an end-to-end machine learning pipeline to predict the daily price movement of a specific stock ticker using historical data from the Yahoo Finance API.
 
 * **Business Objective:** To provide a tool that helps identify whether a stock is likely to close higher or lower the following day, assisting in automated trading decision-making.
-* **Technical Objective:** Develop a production-ready pipeline that automates data ingestion, feature engineering (technical indicators), model training, and backtesting.
-* **Success Metric:** Achieve an **Accuracy > 55%** and optimize **Precision** to reduce the risk of false-positive buy signals.
+* **Technical Objective:** Develop a production-ready pipeline using `scikit-learn Pipeline` objects to automate data scaling, dimensionality reduction (PCA), and model inference without data leakage.
+* **Success Metric:** Aim for **Precision > 53%**. *Note: In high-noise financial environments, a consistent edge over the 50% random baseline is considered a successful predictive signal.*
 
 ## 2. Data
 * **Source:** Yahoo Finance API (via `yfinance` Python library).
-* **Ticker:** `RSP` (Invesco S&P 500® Equal Weight ETF).
-* **Rationale:** Unlike the standard S&P 500, RSP weights all 500 companies equally. This provides a more balanced view of market breadth, making it an excellent target for trend prediction models.
+* **Tickers:** `RSP` (Target: Invesco S&P 500® Equal Weight ETF) & `^VIX` (CBOE Volatility Index).
+* **Rationale:** Adding the VIX provides a sentiment layer (market fear) that complements the price action of the RSP, helping the model identify regime changes.
 * **Type:** Time-series OHLCV data (Open, High, Low, Close, Volume).
 * **Timeframe:** From 2003-05-01 (Inception) to Present.
 * **Key Characteristics:**
-    * **Features:** Daily returns, Moving Averages (SMA 50/200), RSI (Relative Strength Index), and Volume changes.
+    * **Features:** A 12-dimensional vector including Daily returns, multi-horizon Price Ratios (5, 60, 250 days), Moving Average trends, and VIX volatility levels.
+    * **Dimensionality Reduction:** Implementation of **PCA** to condense features into 9 principal components while retaining 95% of variance.
     * **Target:** Binary classification (1 if Tomorrow's Close > Today's Close, else 0).
 
-## 3. Analysis & Workflow
-1.  **Data Ingestion:** Automated fetching of historical data using the `yfinance` API.
-2.  **Exploratory Data Analysis (EDA):** Visualizing price trends, volatility, and correlation between technical indicators and price movement.
-3.  **Feature Engineering:** Creating lagged variables and technical momentum indicators to capture market sentiment.
-4.  **Modeling:** * Baseline: Random Forest Classifier.
-    * Advanced: XGBoost or Gradient Boosting Machines.
-5.  **Evaluation:** * Use of **Time-Series Cross-Validation** (to avoid data leakage).
-    * Performance analysis via Confusion Matrix, Precision-Recall curves, and Cumulative Return backtesting.
-6.  **Productionalization:** Exporting the trained model and creating a script for real-time daily inference.
+## 3. Analysis & Workflow 
+1. **Data Ingestion:** Automated fetching and merging of historical RSP price data and VIX sentiment data.
+2. **Exploratory Data Analysis (EDA):** Visualizing price trends, volatility clusters, and the inverse correlation between the VIX and RSP returns.
+3. **Feature Engineering & Noise Reduction:** * Creation of lagged variables and momentum indicators.
+    * **PCA Implementation** to filter out market noise and focus on the most significant variance components.
+4. **Modeling:** Optimized **Random Forest Classifier** integrated into a modular `scikit-learn Pipeline`.
+5. **Evaluation:** * Hyperparameter tuning using a dedicated Validation Set.
+    * Use of a strict **Blind Test Set** (final 10% of data) to verify real-world performance and generalizability.
+6. **Productionalization:** Modular architecture designed to handle raw input and produce daily directional inferences automatically.
